@@ -1,0 +1,14 @@
+{
+  "name": "dataeum-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}
