@@ -1,0 +1,14 @@
+services:
+  dataeum:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    expose:
+      - "8001"
+    networks:
+      - mvtp-web-net
+
+networks:
+  mvtp-web-net:
+    external: true
