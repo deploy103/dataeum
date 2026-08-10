@@ -16,7 +16,8 @@ WORKDIR /app
 
 COPY backend ./backend
 RUN mkdir -p build \
-    && g++ -std=c++20 -O2 -pthread -Wall -Wextra backend/main.cpp -o build/dataeum-server
+    && g++ -std=c++20 -O2 -pthread -Wall -Wextra -static-libstdc++ -static-libgcc \
+        backend/main.cpp -o build/dataeum-server
 
 FROM debian:bookworm-slim AS runtime
 
