@@ -21,7 +21,10 @@ RUN mkdir -p build \
 
 FROM debian:bookworm-slim AS runtime
 
-RUN groupadd --system --gid 10001 dataeum \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --system --gid 10001 dataeum \
     && useradd --system --uid 10001 --gid dataeum --home-dir /app --shell /usr/sbin/nologin dataeum
 
 WORKDIR /app
