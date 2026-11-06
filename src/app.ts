@@ -156,11 +156,20 @@ function tableToCSV(table){return table.map(row=>row.map(csvCell).join(',')).joi
 function validateTable(table, source){
   if(!Array.isArray(table)||table.length<2)throw new Error(`${source}에 헤더와 데이터 행이 필요합니다.`);
   if(table.length>500001)throw new Error('데이터 행은 50만 개까지 분석할 수 있습니다.');
-  const width=Math.max(...table.slice(0,2000).map(r=>Array.isArray(r)?r.length:0));
+  let width=0;
+  for(let i=0;i<Math.min(table.length,2000);i++){
+    if(Array.isArray(table[i]))width=Math.max(width,table[i].length);
+  }
   if(width<2||width>500)throw new Error('2~500개 열로 구성된 표만 분석할 수 있습니다.');
   const header=(table[0]||[]).slice(0,width).map(v=>String(v??'').trim()),filled=header.filter(Boolean);
   if(filled.length<2||filled.length/width<.7)throw new Error('첫 행에서 명확한 열 이름을 찾지 못했습니다. 표 형태의 파일인지 확인하세요.');
   if(new Set(filled).size/filled.length<.7)throw new Error('중복된 열 이름이 너무 많아 표 구조를 신뢰할 수 없습니다.');
+  for(let i=2000;i<table.length;i++){
+    const row=table[i];
+    if(Array.isArray(row)&&row.length>width&&row.some(v=>v!==''&&v!=null)){
+      throw new Error(`${i+1}행의 열 수가 앞부분의 ${width}개 열보다 많습니다. 열 구성을 확인하세요.`);
+    }
+  }
   const dataRows=table.slice(1).filter(r=>Array.isArray(r)&&r.some(v=>v!==''&&v!=null));
   if(!dataRows.length)throw new Error('분석할 데이터 행이 없습니다.');
   const populated=dataRows.slice(0,1000).filter(r=>r.filter(v=>v!==''&&v!=null).length>=Math.max(1,Math.floor(filled.length*.3))).length;
