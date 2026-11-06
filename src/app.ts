@@ -113,7 +113,7 @@ function buildInsights(){
 function format(n){ if(n==null)return '—'; return Intl.NumberFormat('ko-KR',{notation:Math.abs(n)>=1e6?'compact':'standard',maximumFractionDigits:1}).format(n); }
 function render(){
   $('#landing').hidden=true; $('.how-it-works').hidden=true; $('#workspace').hidden=false; window.scrollTo({top:0});
-  $('#datasetTitle').textContent=state.fileName.replace(/\.(csv|xlsx|json)$/i,''); $('#datasetMeta').textContent=`${state.rows.length.toLocaleString()}행 · ${state.headers.length}열 · 로컬 분석`;
+  $('#datasetTitle').textContent=state.fileName.replace(/\.(csv|xlsx|json)$/i,''); $('#datasetMeta').textContent=`${state.rows.length.toLocaleString()}행 · ${state.headers.length}열 · 서버 분석`;
   const total=state.rows.length*state.headers.length, missing=state.profiles.reduce((a,p)=>a+p.missing,0), duplicate=state.rows.length-new Set(state.rows.map(r=>JSON.stringify(r))).size, issues=state.profiles.filter(p=>p.missing||p.outliers).length;
   $('#statusText').textContent=`${issues ? `${issues}개 열에서 확인할 항목을 찾았어요.`:'특별한 품질 문제를 찾지 못했어요.'}`;
   const kpis=[['데이터 행',format(state.rows.length),'분석 가능한 레코드'],['데이터 열',format(state.headers.length),`${state.profiles.filter(p=>p.type==='숫자').length}개 숫자형`],['전체 결측률',`${total?(missing/total*100).toFixed(1):0}%`,`${missing.toLocaleString()}개 빈 셀`],['중복 행',format(duplicate),duplicate?'확인이 필요해요':'중복 없음']];
